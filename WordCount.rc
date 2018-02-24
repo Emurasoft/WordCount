@@ -1,0 +1,97 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Japanese (Japan) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_16C_24              BITMAP                  "wordcount_16c_24.bmp"
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Japanese (Japan) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP              BITMAP                  "woodcount_16c_16.bmp"
+IDB_256C_16_BW          BITMAP                  "wordcount_256_16_b&w.bmp"
+IDB_256C_16_DEFAULT     BITMAP                  "wordcount_256_16_default.bmp"
+IDB_256C_16_HOT         BITMAP                  "wordcount_256_16_hot.bmp"
+IDB_256C_24_BW          BITMAP                  "wordcount_256_24_b&w.bmp"
+IDB_256C_24_DEFAULT     BITMAP                  "wordcount_256_24_default.bmp"
+IDB_256C_24_HOT         BITMAP                  "wordcount_256_24_hot.bmp"
+IDB_TRUE_16_BW          BITMAP                  "wordcount_true_16_b&w.bmp"
+IDB_TRUE_16_DEFAULT     BITMAP                  "wordcount_true_16_default.bmp"
+IDB_TRUE_16_HOT         BITMAP                  "wordcount_true_16_hot.bmp"
+IDB_TRUE_24_BW          BITMAP                  "wordcount_true_24_b&w.bmp"
+IDB_TRUE_24_DEFAULT     BITMAP                  "wordcount_true_24_default.bmp"
+IDB_TRUE_24_HOT         BITMAP                  "wordcount_true_24_hot.bmp"
+#endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
