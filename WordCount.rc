@@ -68,12 +68,6 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 //
 
 IDB_BITMAP              BITMAP                  "woodcount_16c_16.bmp"
-IDB_256C_16_BW          BITMAP                  "wordcount_256_16_b&w.bmp"
-IDB_256C_16_DEFAULT     BITMAP                  "wordcount_256_16_default.bmp"
-IDB_256C_16_HOT         BITMAP                  "wordcount_256_16_hot.bmp"
-IDB_256C_24_BW          BITMAP                  "wordcount_256_24_b&w.bmp"
-IDB_256C_24_DEFAULT     BITMAP                  "wordcount_256_24_default.bmp"
-IDB_256C_24_HOT         BITMAP                  "wordcount_256_24_hot.bmp"
 IDB_TRUE_16_BW          BITMAP                  "wordcount_true_16_b&w.bmp"
 IDB_TRUE_16_DEFAULT     BITMAP                  "wordcount_true_16_default.bmp"
 IDB_TRUE_16_HOT         BITMAP                  "wordcount_true_16_hot.bmp"

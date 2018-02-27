@@ -584,12 +584,6 @@
     <None Include="WordCount.def" />
     <None Include="woodcount_16c_16.bmp" />
     <None Include="wordcount_16c_24.bmp" />
-    <None Include="wordcount_256_16_b&amp;w.bmp" />
-    <None Include="wordcount_256_16_default.bmp" />
-    <None Include="wordcount_256_16_hot.bmp" />
-    <None Include="wordcount_256_24_b&amp;w.bmp" />
-    <None Include="wordcount_256_24_default.bmp" />
-    <None Include="wordcount_256_24_hot.bmp" />
     <None Include="wordcount_true_16_b&amp;w.bmp" />
     <None Include="wordcount_true_16_default.bmp" />
     <None Include="wordcount_true_16_hot.bmp" />
