@@ -749,6 +749,8 @@ public:
 			}
 		}
 
+		nWidths += (UINT_PTR)Editor_IsCharHalfOrFull( m_hWnd, psz, (INT_PTR)wcslen( psz ) );
+
 		BOOL bAlphaNum = FALSE;
 		LPCWSTR p = psz;
 		LPCWSTR pWord = psz;
@@ -765,8 +767,8 @@ public:
 			}
 			bAlphaNum = b;
 
-			int nCharWidth = Editor_IsCharHalfOrFull( m_hWnd, *p );
-			nWidths += nCharWidth;
+			//int nCharWidth = Editor_IsCharHalfOrFull( m_hWnd, *p );
+			//nWidths += nCharWidth;
 			WCHAR szChar[3];
 			szChar[0] = *p;
 			szChar[1] = 0;
@@ -831,6 +833,7 @@ public:
 								it->m_nCount++;
 							}
 							else if( (it->m_nType & TYPE_MASK) == TYPE_WIDTHS ){
+								INT_PTR nCharWidth = Editor_IsCharHalfOrFull( m_hWnd, szChar, (INT_PTR)wcslen( szChar ) );
 								it->m_nCount += nCharWidth;
 							}
 						}
@@ -997,7 +1000,11 @@ public:
 		
 		if( bSel ){
 			nLinesSel = ptBottom.y - ptTop.y + 1;
-			nViewLinesSel =	ptBottomView.y - ptTopView.y + 1;
+			//nViewLinesSel = ptBottomView.y - ptTopView.y + 1;
+			nViewLinesSel =	ptBottomView.y - ptTopView.y;
+			if( ptBottomView.x > 0 ) {
+				nViewLinesSel++;
+			}
 		}
 
 		for( CQueryArray::iterator it = m_Array.begin(); it != m_Array.end(); it++ ){
