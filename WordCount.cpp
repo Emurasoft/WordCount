@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "resource.h"
-//#include "..\mui\wordcount_loce\resource.h"
 #include "emedloce\resource.h"
 
 // the following line is needed before #include <etlframe.h>
