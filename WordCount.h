@@ -255,14 +255,14 @@ public:
 		//if( m_hwndList )  return;
 		if( m_hDlg )  return;
 
-		TCHAR sz[260];
+		//TCHAR sz[260];
 		TCHAR szAppName[80];
 		LoadString( EEGetLocaleInstanceHandle(), IDS_WORDCOUNT_MENU_TEXT, szAppName, _countof( szAppName ) );
-		if( Editor_GetVersion( m_hWnd ) < 8000 ){
-			LoadString( EEGetLocaleInstanceHandle(), IDS_INVALID_VERSION, sz, _countof( sz ) );
-			MessageBox( m_hWnd, sz, szAppName, MB_OK | MB_ICONSTOP );
-			return;
-		}
+		//if( Editor_GetVersion( m_hWnd ) < 8000 ){
+		//	LoadString( EEGetLocaleInstanceHandle(), IDS_INVALID_VERSION, sz, _countof( sz ) );
+		//	MessageBox( m_hWnd, sz, szAppName, MB_OK | MB_ICONSTOP );
+		//	return;
+		//}
 
 		m_hDlg = CreateDialog( EEGetLocaleInstanceHandle(), MAKEINTRESOURCE( IDD_WORDCOUNT_MAIN ), m_hWnd, MainProc );
 
@@ -916,7 +916,7 @@ public:
 			gli.yLine = i;
 			gli.cch = 0;
 			UINT_PTR cchNeeded = Editor_GetLineW( m_hWnd, &gli, NULL );
-			if( cchBuf < cchNeeded ){
+			if( !pBuf || cchBuf < cchNeeded ){
 				delete [] pBuf;
 				pBuf = new WCHAR[ cchNeeded ];
 				if( !pBuf ){
@@ -1252,7 +1252,7 @@ public:
 				EmptyClipboard();
 
 				wstring sLines;
-				TCHAR szText[260];
+				TCHAR szText[260] = {};
 				LVITEM item;
 				ZeroMemory( &item, sizeof( item ) );
 				item.pszText = szText;
