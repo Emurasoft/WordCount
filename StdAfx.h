@@ -8,7 +8,6 @@
 
 #include <windows.h>
 #include <windowsx.h>
-#include <tchar.h>
 #include <malloc.h>
 #include <strsafe.h>
 #include <crtdbg.h>
@@ -42,5 +41,5 @@ using namespace std;
    #define _RELEASE_NEW
 #else
    #define _DEBUG_NEW
-   #define _RELEASE_NEW new(nothrow)
+   #define _RELEASE_NEW new
 #endif // _DEBUG

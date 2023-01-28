@@ -2,21 +2,16 @@
 
 #include <VersionHelpers.h>
 
-LPCTSTR const szEmEditorClass = _T("EmEditorMainFrame3");
+LPCWSTR const szEmEditorClass = L"EmEditorMainFrame3";
 
-void GetProfileStringReg( HKEY hKey, LPCTSTR lpszEntry, LPTSTR lpszBuf, DWORD cchBufSize, LPCTSTR lpszDefault )
+void GetProfileStringReg( HKEY hKey, LPCWSTR lpszEntry, LPWSTR lpszBuf, DWORD cchBufSize, LPCWSTR lpszDefault )
 {
 	DWORD dwType, dwCount;
-	dwCount = cchBufSize * sizeof( TCHAR );
+	dwCount = cchBufSize * sizeof( WCHAR );
 	if( hKey == NULL 
 	  || RegQueryValueEx( hKey, lpszEntry, NULL, &dwType, (LPBYTE)lpszBuf, &dwCount) != ERROR_SUCCESS ){
 		StringCopy( lpszBuf, cchBufSize, lpszDefault );
 	}
-}
-
-int mystrcmp( LPCWSTR psz1, LPCWSTR psz2 )
-{
-	return CompareStringOrdinal( psz1, -1, psz2, -1, FALSE ) - 2;
 }
 
 bool MyIsWindows10OrGreater()
@@ -43,7 +38,7 @@ UINT MyGetDpiForWindow( HWND hwnd )
 
 	HWND hwndOrg = hwnd;
 	if( dpi == 0 ) {
-		TCHAR szClassName[30];
+		WCHAR szClassName[30];
 		for( ;; ) {
 			if( hwnd == NULL ) {
 				hwnd = GetWindow( hwndOrg, GW_OWNER );
@@ -54,7 +49,7 @@ UINT MyGetDpiForWindow( HWND hwnd )
 			if( !GetClassName(hwnd, szClassName, 30) ) {
 				break;
 			}
-			if( mystrcmp(szClassName, szEmEditorClass) == 0 ) {
+			if( wcscmp(szClassName, szEmEditorClass) == 0 ) {
 				// found
 				dpi = (UINT)Editor_Info( hwnd, EI_GET_DPI, 0 );
 				return dpi;
@@ -69,7 +64,7 @@ UINT MyGetDpiForWindow( HWND hwnd )
 		HDC hdc = GetDC(0);
 		if( hdc ) {
 			dpi = GetDeviceCaps( hdc, LOGPIXELSY );
-			DeleteDC( hdc );
+			ReleaseDC( 0, hdc );
 		}
 	}
 	if( dpi == 0 ) {

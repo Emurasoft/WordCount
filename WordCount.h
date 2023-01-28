@@ -31,11 +31,11 @@ UINT WINAPI WorkThread(LPVOID lpData);
 
 #define SIGNATURE_QUERY_ARRAY 0x00FE0200
 
-LPCTSTR const szQueryArrayEntry = _T("QueryArray");
-LPCTSTR const szAutoRefresh = _T("AutoRefresh");
-LPCTSTR const szColumnEntryFormat = _T("ColumnWidth%d");
-LPCTSTR const szAlphanumericCharsEntry = _T("AlphanumericChars");
-LPCTSTR const szDefAlphanumericChars = _T("_");
+LPCWSTR const szQueryArrayEntry = L"QueryArray";
+LPCWSTR const szAutoRefresh = L"AutoRefresh";
+LPCWSTR const szColumnEntryFormat = L"ColumnWidth%d";
+LPCWSTR const szAlphanumericCharsEntry = L"AlphanumericChars";
+LPCWSTR const szDefAlphanumericChars = L"_";
 
 __forceinline BOOL IsHighSurrogate( WCHAR ch )
 {
@@ -216,7 +216,7 @@ public:
 	int  m_iPos;
 	int  m_iOldPos;
 	int  m_nDpi;
-	TCHAR m_szAlphanumericChars[MAX_ALPHANUMERIC_CHARS];
+	WCHAR m_szAlphanumericChars[MAX_ALPHANUMERIC_CHARS];
 	bool m_bOpenStartup;
 	bool m_bUpdateList;
 	bool m_bAbortThread;
@@ -255,8 +255,8 @@ public:
 		//if( m_hwndList )  return;
 		if( m_hDlg )  return;
 
-		//TCHAR sz[260];
-		TCHAR szAppName[80];
+		//WCHAR sz[260];
+		WCHAR szAppName[80];
 		LoadString( EEGetLocaleInstanceHandle(), IDS_WORDCOUNT_MENU_TEXT, szAppName, _countof( szAppName ) );
 		//if( Editor_GetVersion( m_hWnd ) < 8000 ){
 		//	LoadString( EEGetLocaleInstanceHandle(), IDS_INVALID_VERSION, sz, _countof( sz ) );
@@ -337,8 +337,8 @@ public:
 	void OnEvents( HWND hwndView, UINT nEvent, LPARAM lParam )
 	{
 		if( nEvent & EVENT_CREATE_FRAME ){
-			m_bOpenStartup = !!GetProfileInt( _T("OpenStartup"), FALSE );
-			m_iPos = GetProfileInt( _T("CustomBarPos"), CUSTOM_BAR_RIGHT );
+			m_bOpenStartup = !!GetProfileInt( L"OpenStartup", FALSE );
+			m_iPos = GetProfileInt( L"CustomBarPos", CUSTOM_BAR_RIGHT );
 			m_iOldPos = m_iPos;
 
 			if( m_bOpenStartup ){
@@ -377,7 +377,7 @@ public:
 					_ASSERT( !IsWindow( m_hwndList ) );
 					CustomBarClosed();
 					m_bOpenStartup = (pCBCI->dwFlags & CLOSED_FRAME_WINDOW);
-					WriteProfileInt( _T("OpenStartup"), m_bOpenStartup );
+					WriteProfileInt( L"OpenStartup", m_bOpenStartup );
 				}
 			}
 		}
@@ -436,25 +436,25 @@ public:
 		return TRUE;
 	}
 
-	BOOL SetUninstall( HWND hDlg, LPTSTR pszUninstallCommand, LPTSTR pszUninstallParam )
+	BOOL SetUninstall( HWND hDlg, LPWSTR pszUninstallCommand, LPWSTR pszUninstallParam )
 	{
-		TCHAR szProductCode[80] = { 0 };
+		WCHAR szProductCode[80] = { 0 };
 		HKEY hKey = NULL;
-		if( RegOpenKeyEx( HKEY_LOCAL_MACHINE, _T("Software\\EmSoft\\EmEditorPlugIns\\WordCount"), 0, KEY_READ, &hKey ) == ERROR_SUCCESS && hKey ){
-			GetProfileStringReg( hKey, _T("ProductCode"), szProductCode, _countof( szProductCode ), _T("") );
+		if( RegOpenKeyEx( HKEY_LOCAL_MACHINE, L"Software\\EmSoft\\EmEditorPlugIns\\WordCount", 0, KEY_READ, &hKey ) == ERROR_SUCCESS && hKey ){
+			GetProfileStringReg( hKey, L"ProductCode", szProductCode, _countof( szProductCode ), L"" );
 			if( szProductCode[0] ){
 				GetSystemDirectory( pszUninstallCommand, MAX_PATH );
-				PathAppend( pszUninstallCommand, _T("msiexec.exe") );
+				PathAppend( pszUninstallCommand, L"msiexec.exe" );
 
-				StringPrintf( pszUninstallParam, MAX_PATH, _T("/X%s"), szProductCode );
+				StringPrintf( pszUninstallParam, MAX_PATH, L"/X%s", szProductCode );
 				RegCloseKey( hKey );
 				return UNINSTALL_RUN_COMMAND;
 			}
 		}
-		TCHAR sz[80];
-		TCHAR szAppName[80];
-		LoadString( EEGetLocaleInstanceHandle(), IDS_SURE_TO_UNINSTALL, sz, sizeof( sz ) / sizeof( TCHAR ) );
-		LoadString( EEGetLocaleInstanceHandle(), IDS_WORDCOUNT_MENU_TEXT, szAppName, sizeof( szAppName ) / sizeof( TCHAR ) );
+		WCHAR sz[80];
+		WCHAR szAppName[80];
+		LoadString( EEGetLocaleInstanceHandle(), IDS_SURE_TO_UNINSTALL, sz, sizeof( sz ) / sizeof( WCHAR ) );
+		LoadString( EEGetLocaleInstanceHandle(), IDS_WORDCOUNT_MENU_TEXT, szAppName, sizeof( szAppName ) / sizeof( WCHAR ) );
 		if( MessageBox( hDlg, sz, szAppName, MB_YESNO | MB_ICONEXCLAMATION ) == IDYES ){
 			return UNINSTALL_SIMPLE_DELETE;
 		}
@@ -631,7 +631,7 @@ public:
 	{
 		ResetThread();
 		m_Array.clear();
-		TCHAR sz[80];
+		WCHAR sz[80];
 		LoadString( EEGetLocaleInstanceHandle(), IDS_CHARACTERS, sz, _countof( sz ) );
 		m_Array.push_back( CQuery( TYPE_CHARS, sz, L"" ) );
 		LoadString( EEGetLocaleInstanceHandle(), IDS_WIDTHS, sz, _countof( sz ) );
@@ -653,7 +653,7 @@ public:
 			int dpi = MyGetDpiForWindow( m_hwndList );
 			for( int i = 0; i < 3; i++ ){
 				int nWidth = ListView_GetColumnWidth( m_hwndList, i );
-				TCHAR sz[80];
+				WCHAR sz[80];
 				StringPrintf( sz, _countof( sz ), szColumnEntryFormat, i );
 				WriteProfileInt( sz, MulDiv( nWidth, 96, dpi ) );
 			}
@@ -896,7 +896,7 @@ public:
 		nWordsAll = 0;
 		int nBeforeAfterSel = -1;
 
-		//TCHAR sz[MAX_ALPHANUMERIC_CHARS];
+		//WCHAR sz[MAX_ALPHANUMERIC_CHARS];
 		GetProfileString( EEREG_COMMON, NULL, szAlphanumericCharsEntry, m_szAlphanumericChars, _countof( m_szAlphanumericChars ), szDefAlphanumericChars );
 
 		nLinesAll = Editor_GetLines( m_hWnd, POS_LOGICAL_W );
@@ -1110,14 +1110,14 @@ public:
 			item.mask = LVIF_TEXT;
 			item.iItem = i;
 
-			TCHAR sz[80];
+			WCHAR sz[80];
 			item.pszText = sz;
 			item.iSubItem = 1;
-			StringPrintf( sz, _countof( sz ), _T("%Iu"), it->m_nAll );
+			StringPrintf( sz, _countof( sz ), L"%Iu", it->m_nAll );
 			ListView_SetItem( m_hwndList, &item );
 			item.iSubItem = 2;
 			if( bSel ){
-				StringPrintf( sz, _countof( sz ), _T("%Iu"), it->m_nSel );
+				StringPrintf( sz, _countof( sz ), L"%Iu", it->m_nSel );
 			}
 			else {
 				sz[0] = 0;
@@ -1143,10 +1143,10 @@ public:
 		//		item.mask = LVIF_TEXT;
 		//		item.iItem = i;
 
-		//		TCHAR sz[80];
+		//		WCHAR sz[80];
 		//		item.pszText = sz;
 		//		item.iSubItem = 1;
-		//		StringPrintf( sz, _countof( sz ), _T("%Iu"), nPercent );
+		//		StringPrintf( sz, _countof( sz ), L"%Iu", nPercent );
 		//		ListView_SetItem( m_hwndList, &item );
 		//	}
 		//	i++;
@@ -1160,18 +1160,19 @@ public:
 		if( !hwndList )  return FALSE;
 		m_hwndList = hwndList;
 		_ASSERT( hwndList );
+		Editor_Info( m_hWnd, EI_INIT_LISTVIEW, (LPARAM)hwndList );
 
 		int dpi = MyGetDpiForWindow( hwndList );
 		m_nDpi = dpi;
 		int anWidth[3];
 		for( int i = 0; i < 3; i++ ){
-			TCHAR sz[80];
+			WCHAR sz[80];
 			StringPrintf( sz, _countof( sz ), szColumnEntryFormat, i );
 			anWidth[i] = max( GetProfileInt( sz, 80 ), 8 );
 			anWidth[i] = MulDiv( anWidth[i], dpi, 96 );
 		}
 
-		TCHAR szText[32];
+		WCHAR szText[32];
 		LV_COLUMN lvC;
 		ZeroMemory( &lvC, sizeof(lvC) );
 		lvC.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
@@ -1203,6 +1204,7 @@ public:
 
 		DWORD dwFlags = LVS_EX_FULLROWSELECT | LVS_EX_LABELTIP;
 		ListView_SetExtendedListViewStyleEx( hwndList, dwFlags, dwFlags );
+		Editor_Info( m_hWnd, EI_WM_INITDIALOG, (LPARAM)hwnd );
 		if( IsWindowVisible( m_hWnd ) ){
 			return TRUE;
 		}
@@ -1252,7 +1254,7 @@ public:
 				EmptyClipboard();
 
 				wstring sLines;
-				TCHAR szText[260] = {};
+				WCHAR szText[260] = {};
 				LVITEM item;
 				ZeroMemory( &item, sizeof( item ) );
 				item.pszText = szText;
@@ -1268,17 +1270,17 @@ public:
 						SendMessage( m_hwndList, LVM_GETITEMTEXT, item.iItem, (LPARAM)&item );
 						sLines += szText;
 						if( item.iSubItem != 2 ){
-							sLines += _T('\t');
+							sLines += L'\t';
 						}
 					}
-					sLines += _T("\r\n");
+					sLines += L"\r\n";
 				}
 
 				size_t cchLines = sLines.length() + 1;
-				HGLOBAL hData = GlobalAlloc( GMEM_MOVEABLE, cchLines * sizeof( TCHAR ) );
+				HGLOBAL hData = GlobalAlloc( GMEM_MOVEABLE, cchLines * sizeof( WCHAR ) );
 				if( hData != NULL ) {
-					LPTSTR hpData;
-					if( (hpData = (LPTSTR)GlobalLock(hData)) != NULL ) {
+					LPWSTR hpData;
+					if( (hpData = (LPWSTR)GlobalLock(hData)) != NULL ) {
 						StringCopy( hpData, cchLines, sLines.c_str() );
 						GlobalUnlock(hData);
 					}
@@ -1433,10 +1435,11 @@ public:
 		HWND hwndList = GetDlgItem( hDlg, IDC_LIST );
 		if( !hwndList )  return;
 
+		Editor_Info( m_hWnd, EI_INIT_LISTVIEW, (LPARAM)hwndList );
 		//ListView_SetExtendedListViewStyleEx( hwndList, LVS_EX_FULLROWSELECT, LVS_EX_FULLROWSELECT );
 		ListView_SetExtendedListViewStyleEx( hwndList, LVS_EX_FULLROWSELECT | LVS_EX_LABELTIP | LVS_EX_AUTOSIZECOLUMNS, LVS_EX_FULLROWSELECT | LVS_EX_LABELTIP | LVS_EX_AUTOSIZECOLUMNS );
 
-		TCHAR sz[80];
+		WCHAR sz[80];
 		LV_COLUMN lvC = { 0 };
 		lvC.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 		lvC.pszText = sz;
@@ -1448,7 +1451,7 @@ public:
 
 		CustomizeRefreshList( hDlg, 0 );
 		m_bRefreshOnClose = false;
-
+		Editor_Info( m_hWnd, EI_WM_INITDIALOG, (LPARAM)hDlg );
 	}
 
 	void OnCustomizeCommand( HWND hDlg, WPARAM wParam )
@@ -1484,9 +1487,9 @@ public:
 			OnCustomizeUpDown( hDlg, 1 );
 		}
 		else if( wParam == IDC_RESET ){
-			TCHAR sz[260], szAppName[80];
+			WCHAR sz[260], szAppName[80];
 			LoadString( EEGetLocaleInstanceHandle(), IDS_SURE_RESET_QUERIES, sz, _countof( sz ) );
-			LoadString( EEGetLocaleInstanceHandle(), IDS_WORDCOUNT_MENU_TEXT, szAppName, sizeof( szAppName ) / sizeof( TCHAR ) );
+			LoadString( EEGetLocaleInstanceHandle(), IDS_WORDCOUNT_MENU_TEXT, szAppName, sizeof( szAppName ) / sizeof( WCHAR ) );
 			if( MessageBox( hDlg, sz, szAppName, MB_YESNO | MB_ICONEXCLAMATION ) == IDYES ){
 				ResetArray();
 				CustomizeRefreshList( hDlg, 0 );
@@ -1547,13 +1550,13 @@ public:
 		VERIFY( CheckDlgButton( hDlg, IDC_CHECK_REGEXP, (m_pProp->m_nType & TYPE_REGEXP) ? TRUE : FALSE ) );
 
 		CustomizeShowHide( hDlg );
-
+		Editor_Info( m_hWnd, EI_WM_INITDIALOG, (LPARAM)hDlg );
 	}
 
 	void OnCustPropCommand( HWND hDlg, WPARAM wParam )
 	{
 		if( wParam == IDOK ){
-			TCHAR sz[MAX_TITLE];
+			WCHAR sz[MAX_TITLE];
 			GetDlgItemText( hDlg, IDC_TITLE, sz, _countof( sz ) );
 			m_pProp->m_sTitle = sz;
 
@@ -1607,14 +1610,14 @@ public:
 			HWND hwndButton = (HWND)GetDlgItem( hDlg, (int)wParam );
 			RECT rect;
 			GetWindowRect( hwndButton, &rect );
-			BOOL bRightAlign = GetSystemMetrics( SM_MENUDROPALIGNMENT );
+			BOOL bRightAlign = RightAligned();
 			HMENU hMenu = LoadMenu( EEGetLocaleInstanceHandle(), MAKEINTRESOURCE( IDR_WORDCOUNT_ARG_POPUP ) );
 			HMENU hSubMenu = GetSubMenu( hMenu, 0 );
 			UINT uID = TrackPopupMenu( hSubMenu, (bRightAlign ? TPM_RIGHTALIGN : TPM_LEFTALIGN) | TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, bRightAlign ? rect.right : rect.left, rect.bottom, 0, hDlg, NULL );
 			if( uID != 0 ){
-				TCHAR sz[80];
+				WCHAR sz[80];
 				if( GetMenuString( hSubMenu, uID, sz, _countof( sz ), MF_BYCOMMAND ) ){
-					LPTSTR p = _tcschr( sz, '\t' );
+					LPWSTR p = wcschr( sz, '\t' );
 					if( p )  *p = 0;
 					SendDlgItemMessage( hDlg, IDC_EDIT_REGEXP, EM_REPLACESEL, TRUE, (LPARAM)sz );
 				}
@@ -1626,7 +1629,7 @@ public:
 	BOOL OnPropInitDialog( HWND hwnd )
 	{
 		CenterWindow( hwnd );
-		TCHAR sz[256];
+		WCHAR sz[256];
 		for( int i = 0; i < 4; i++ ){
 			LoadString( EEGetLocaleInstanceHandle(), IDS_POS_LEFT + i, sz, _countof( sz ) );
 			SendDlgItemMessage( hwnd, IDC_COMBO_POS, CB_ADDSTRING, 0, (LPARAM)sz );
@@ -1635,6 +1638,7 @@ public:
 		LoadString( EEGetLocaleInstanceHandle(), IDS_WORDCOUNT_MENU_TEXT, sz, _countof( sz ) );
 		SetWindowText( hwnd, sz );
 		m_iOldPos = m_iPos;
+		Editor_Info( m_hWnd, EI_WM_INITDIALOG, (LPARAM)hwnd );
 		return TRUE;
 	}
 	
@@ -1644,7 +1648,7 @@ public:
 		case IDOK:
 			{
 				m_iPos = (int)SendDlgItemMessage( hwnd, IDC_COMBO_POS, CB_GETCURSEL, 0, 0 );
-				WriteProfileInt( _T("CustomBarPos"), m_iPos );
+				WriteProfileInt( L"CustomBarPos", m_iPos );
 
 				EndDialog( hwnd, IDOK );
 				if( m_iPos != m_iOldPos ){
@@ -1682,7 +1686,7 @@ public:
 		if( ListView_GetSelectedCount( m_hwndList ) == 0 ) {
 			EnableMenuItem( hMenu, ID_EDIT_COPY, MF_GRAYED );
 		}
-		int nID = TrackPopupMenu( hMenu, (GetSystemMetrics( SM_MENUDROPALIGNMENT ) ? TPM_RIGHTALIGN : TPM_LEFTALIGN) | TPM_RIGHTBUTTON | TPM_RETURNCMD, xPos, yPos, 0, m_hwndList, NULL );
+		int nID = TrackPopupMenu( hMenu, GetMenuAlign() | TPM_RIGHTBUTTON | TPM_RETURNCMD, xPos, yPos, 0, m_hwndList, NULL );
 		DestroyMenu( hMainMenu );
 
 		switch( nID ){
@@ -1748,6 +1752,27 @@ INT_PTR CALLBACK CustomizeDlg( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 			nResult = pFrame->OnCustomizeNotify( hwnd, (int)wParam, (LPNMHDR)lParam );
 		}
 		break;
+
+	case WM_CTLCOLORDLG:
+	case WM_CTLCOLORSTATIC:
+	case WM_CTLCOLOREDIT:
+	case WM_CTLCOLORBTN:
+	case WM_CTLCOLORLISTBOX:
+		{
+			CMyFrame* pFrame = static_cast<CMyFrame*>( GetFrame( hwnd ) );
+			if( pFrame ) {
+				return Editor_Info( pFrame->m_hWnd, EI_WM_CTLCOLOR, wParam );
+			}
+		}
+		break;
+	case WM_THEMECHANGED:
+		{
+			CMyFrame* pFrame = static_cast<CMyFrame*>( GetFrame( hwnd ) );
+			if( pFrame ) {
+				Editor_Info( pFrame->m_hWnd, EI_WM_THEMECHANGED, (LPARAM)hwnd );
+			}
+		}
+		break;
 	}
 	return (BOOL)nResult;
 }
@@ -1770,6 +1795,27 @@ INT_PTR CALLBACK CustPropDlg( HWND hwnd, UINT msg, WPARAM wParam, LPARAM /*lPara
 		{
 			CMyFrame* pFrame = static_cast<CMyFrame*>(GetFrame( hwnd ));
 			pFrame->OnCustPropCommand( hwnd, wParam );
+		}
+		break;
+
+	case WM_CTLCOLORDLG:
+	case WM_CTLCOLORSTATIC:
+	case WM_CTLCOLOREDIT:
+	case WM_CTLCOLORBTN:
+	case WM_CTLCOLORLISTBOX:
+		{
+			CMyFrame* pFrame = static_cast<CMyFrame*>( GetFrame( hwnd ) );
+			if( pFrame ) {
+				return Editor_Info( pFrame->m_hWnd, EI_WM_CTLCOLOR, wParam );
+			}
+		}
+		break;
+	case WM_THEMECHANGED:
+		{
+			CMyFrame* pFrame = static_cast<CMyFrame*>( GetFrame( hwnd ) );
+			if( pFrame ) {
+				Editor_Info( pFrame->m_hWnd, EI_WM_THEMECHANGED, (LPARAM)hwnd );
+			}
 		}
 		break;
 
@@ -1863,6 +1909,27 @@ INT_PTR CALLBACK MainProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 			}
 		}
 		break;
+	case WM_CTLCOLORDLG:
+	case WM_CTLCOLORSTATIC:
+	case WM_CTLCOLOREDIT:
+	case WM_CTLCOLORBTN:
+	case WM_CTLCOLORLISTBOX:
+		{
+			CMyFrame* pFrame = static_cast<CMyFrame*>( GetFrame( hwnd ) );
+			if( pFrame ) {
+				return Editor_Info( pFrame->m_hWnd, EI_WM_CTLCOLOR, wParam );
+			}
+		}
+		break;
+	case WM_THEMECHANGED:
+		{
+			CMyFrame* pFrame = static_cast<CMyFrame*>( GetFrame( hwnd ) );
+			if( pFrame ) {
+				Editor_Info( pFrame->m_hWnd, EI_WM_THEMECHANGED, (LPARAM)hwnd );
+			}
+		}
+		break;
+
 //	case WM_NOTIFY:
 //		{
 //			NMHDR* pnmh = (NMHDR*)lParam;
@@ -1905,6 +1972,26 @@ INT_PTR CALLBACK PropDlg( HWND hwnd, UINT msg, WPARAM wParam, LPARAM /*lParam*/ 
 			pFrame->OnPropDlgCommand( hwnd, wParam );
 		}
 		break;
+	case WM_CTLCOLORDLG:
+	case WM_CTLCOLORSTATIC:
+	case WM_CTLCOLOREDIT:
+	case WM_CTLCOLORBTN:
+	case WM_CTLCOLORLISTBOX:
+		{
+			CMyFrame* pFrame = static_cast<CMyFrame*>( GetFrame( hwnd ) );
+			if( pFrame ) {
+				return Editor_Info( pFrame->m_hWnd, EI_WM_CTLCOLOR, wParam );
+			}
+		}
+		break;
+	case WM_THEMECHANGED:
+		{
+			CMyFrame* pFrame = static_cast<CMyFrame*>( GetFrame( hwnd ) );
+			if( pFrame ) {
+				Editor_Info( pFrame->m_hWnd, EI_WM_THEMECHANGED, (LPARAM)hwnd );
+			}
+		}
+		break;
 	}
 	return bResult;
 }
@@ -1912,7 +1999,7 @@ INT_PTR CALLBACK PropDlg( HWND hwnd, UINT msg, WPARAM wParam, LPARAM /*lParam*/ 
 
 int ExceptionHandler( HWND hwnd )
 {
-	int nResult = MessageBox( hwnd, _T("WordCount Plug-in WorkThread error! Click OK and restart EmEditor, or click Cancel to debug"), _T("WordCount"), MB_ICONSTOP | MB_OKCANCEL );
+	int nResult = MessageBox( hwnd, L"WordCount Plug-in WorkThread error! Click OK and restart EmEditor, or click Cancel to debug", L"WordCount", MB_ICONSTOP | MB_OKCANCEL );
 	if( nResult == IDOK ){
 		return EXCEPTION_EXECUTE_HANDLER;
 	}
@@ -1950,7 +2037,7 @@ UINT WINAPI WorkThread(LPVOID lpData)
 		}
 
 //		VERIFY( ReleaseMutex( hMutex ) );
-//		TRACE( _T("WorkThread -- Mutex released.\n") );
+//		TRACE( L"WorkThread -- Mutex released.\n" );
 	}
 
 	pFrame->m_bAbortThread = false;
